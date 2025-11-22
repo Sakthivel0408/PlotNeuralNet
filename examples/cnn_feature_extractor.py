@@ -166,7 +166,7 @@ arch = [
     # ===== FIRST CONVOLUTIONAL BLOCK =====
     # Conv1D: 3 -> 16 channels, kernel=5
     to_Conv("conv1", s_filer=96, n_filer=16, offset="(2.5,0,0)", to="(input-east)", 
-            height=48, depth=48, width=2.5, caption="Conv1D\\\\k=5"),
+            height=48, depth=48, width=2.5, caption="Conv1D\\\\{\\small k=5}"),
     to_connection("input", "conv1"),
     
     # Parameters annotation - positioned above conv1 layer
@@ -184,7 +184,7 @@ arch = [
     
     # MaxPool (96 -> 48)
     to_Pool("pool1", offset="(1.5,0,0)", to="(relu1-east)", 
-            width=1.5, height=42, depth=42, opacity=0.6, caption="MaxPool\\\\k=2"),
+            width=1.5, height=42, depth=42, opacity=0.6, caption="MaxPool\\\\{\\small k=2}"),
     to_connection("relu1", "pool1"),
     
     # Dropout (p=0.3)
@@ -195,7 +195,7 @@ arch = [
     # ===== SECOND CONVOLUTIONAL BLOCK =====
     # Conv1D: 16 -> 32 channels, kernel=3
     to_Conv("conv2", s_filer=46, n_filer=32, offset="(2.5,0,0)", to="(drop1-east)", 
-            height=38, depth=38, width=3, caption="Conv1D\\\\k=3"),
+            height=38, depth=38, width=3, caption="Conv1D\\\\{\\small k=3}"),
     to_connection("drop1", "conv2"),
     
     # Parameters annotation - positioned above conv2 layer
@@ -213,7 +213,7 @@ arch = [
     
     # MaxPool (46 -> 23)
     to_Pool("pool2", offset="(1.5,0,0)", to="(relu2-east)", 
-            width=1.5, height=30, depth=30, opacity=0.6, caption="MaxPool\\\\k=2"),
+            width=1.5, height=30, depth=30, opacity=0.6, caption="MaxPool\\\\{\\small k=2}"),
     to_connection("relu2", "pool2"),
     
     # Dropout (p=0.3)
