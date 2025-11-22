@@ -227,7 +227,7 @@
 
 \draw [connection]  (flatten-east)    -- node {\midarrow} (fc_quantum-west);
 
-\node[text width=6cm, align=center, yshift=0.5cm, xshift=0cm] at (fc_quantum-north) {\tiny 2,948 params};
+\node[text width=6cm, align=center, yshift=1.0cm, xshift=0cm] at (fc_quantum-north) {\tiny 2,948 params};
 
 \pic[shift={(2,0,0)}] at (fc_quantum-east) 
     {Box={
@@ -262,7 +262,7 @@
 
 \draw [connection]  (flatten-east)    -- node {\midarrow} (fc_sel1-west);
 
-\node[text width=6cm, align=center, yshift=-0.5cm, xshift=0cm] at (fc_sel1-south) {\tiny 47,168 params};
+\node[text width=6cm, align=center, yshift=1.0cm, xshift=0cm] at (fc_sel1-north) {\tiny 47,168 params};
 
 \pic[shift={(1.0,0,0)}] at (fc_sel1-east) 
     {Box={
@@ -272,14 +272,14 @@
         zlabel=64,
         fill=\ConvColor,
         height=14,
-        width=0.3,
+        width=1.0,
         depth=14
         }
     };
 
 \draw [connection]  (fc_sel1-east)    -- node {\midarrow} (relu_sel-west);
 
-\pic[shift={(0.4,0,0)}] at (relu_sel-east) 
+\pic[shift={(0.8,0,0)}] at (relu_sel-east) 
     {Box={
         name=drop_sel,
         caption=Drop\\0.2,
@@ -311,7 +311,7 @@
 
 \draw [connection]  (drop_sel-east)    -- node {\midarrow} (fc_sel2-west);
 
-\node[text width=6cm, align=center, yshift=0.5cm, xshift=0cm] at (fc_sel2-north) {\tiny 195 params};
+\node[text width=6cm, align=center, yshift=1.0cm, xshift=0cm] at (fc_sel2-north) {\tiny 195 params};
 
 \pic[shift={(2,0,0)}] at (fc_sel2-east) 
     {Box={

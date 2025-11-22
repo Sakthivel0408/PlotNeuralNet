@@ -234,7 +234,7 @@ arch = [
     to_connection("flatten", "fc_quantum"),
     
     # Parameters annotation - positioned above fc_quantum layer
-    to_layer_annotation(r"\tiny 2,948 params", "fc_quantum", anchor="north", yshift="0.5cm"),
+    to_layer_annotation(r"\tiny 2,948 params", "fc_quantum", anchor="north", yshift="1.0cm"),
     
     # Tanh * π activation
     to_Output("quantum_out", n_output=4, offset="(2,0,0)", to="(fc_quantum-east)", 
@@ -249,16 +249,16 @@ arch = [
                    width=2, height=14, depth=14, caption="FC\\\\736→64"),
     to_connection("flatten", "fc_sel1"),
     
-    # Parameters annotation - positioned below fc_sel1 layer
-    to_layer_annotation(r"\tiny 47,168 params", "fc_sel1", anchor="south", yshift="-0.5cm"),
+    # Parameters annotation - positioned above fc_sel1 layer
+    to_layer_annotation(r"\tiny 47,168 params", "fc_sel1", anchor="north", yshift="1.0cm"),
     
     # ReLU
     to_Conv("relu_sel", s_filer=64, n_filer=64, offset="(1.0,0,0)", to="(fc_sel1-east)", 
-            height=14, depth=14, width=0.3, caption="ReLU"),
+            height=14, depth=14, width=1.0, caption="ReLU"),
     to_connection("fc_sel1", "relu_sel"),
     
     # Dropout (p=0.2)
-    to_Dropout("drop_sel", s_filer=64, n_filer=1, offset="(0.4,0,0)", to="(relu_sel-east)", 
+    to_Dropout("drop_sel", s_filer=64, n_filer=1, offset="(0.8,0,0)", to="(relu_sel-east)", 
                width=0.3, height=14, depth=14, caption="Drop\\\\0.2"),
     to_connection("relu_sel", "drop_sel"),
     
@@ -268,7 +268,7 @@ arch = [
     to_connection("drop_sel", "fc_sel2"),
     
     # Parameters annotation - positioned above fc_sel2 layer
-    to_layer_annotation(r"\tiny 195 params", "fc_sel2", anchor="north", yshift="0.5cm"),
+    to_layer_annotation(r"\tiny 195 params", "fc_sel2", anchor="north", yshift="1.0cm"),
     
     # Softmax output
     to_Output("selector_out", n_output=3, offset="(2,0,0)", to="(fc_sel2-east)", 
