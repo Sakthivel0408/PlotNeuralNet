@@ -1,0 +1,342 @@
+
+\documentclass[border=8pt, multi, tikz]{standalone} 
+\usepackage{import}
+\subimport{../layers/}{init}
+\usetikzlibrary{positioning}
+\usetikzlibrary{3d} %for including external image 
+
+\def\ConvColor{rgb:cyan,5;blue,3;white,5}
+\def\ConvReluColor{rgb:cyan,5;blue,5;white,3}
+\def\PoolColor{rgb:red,1;black,0.3}
+\def\FcColor{rgb:blue,5;cyan,3;white,5}
+\def\QuantumColor{rgb:purple,5;blue,3;white,3}
+\def\SelectorColor{rgb:orange,5;yellow,3;white,3}
+\def\DropoutColor{rgb:gray,5;black,2}
+\def\BNColor{rgb:green,3;cyan,2;white,5}
+
+\newcommand{\copymidarrow}{\tikz \draw[-Stealth,line width=0.8mm,draw={rgb:blue,4;red,1;green,1;black,3}] (-0.3,0) -- ++(0.3,0);}
+
+\begin{document}
+\begin{tikzpicture}
+\tikzstyle{connection}=[ultra thick,every node/.style={sloped,allow upside down},draw=\edgecolor,opacity=0.7]
+\tikzstyle{copyconnection}=[ultra thick,every node/.style={sloped,allow upside down},draw={rgb:blue,4;red,1;green,1;black,3},opacity=0.7]
+
+\node[text width=8cm, align=center] at (0,12,0) {\Large \textbf{CNN Feature Extractor (EnhancedCNN)}};
+
+\node[text width=8cm, align=center] at (0,11,0) {\small Genomic Sequence to Quantum Parameters};
+
+\pic[shift={(0,0,0)}] at (0,0,0) 
+    {Box={
+        name=input,
+        caption=Input\\3×100,
+        xlabel={{3, }},
+        zlabel=100,
+        fill=\ConvColor,
+        height=50,
+        width=1.5,
+        depth=50
+        }
+    };
+
+\node[text width=8cm, align=center] at (-2,0,0) {\tiny Ch0: Base\\Ch1: Pu/Py\\Ch2: H-Bond};
+
+\pic[shift={(2,0,0)}] at (input-east) 
+    {Box={
+        name=conv1,
+        caption=Conv1D\\k=5,
+        xlabel={{16, }},
+        zlabel=96,
+        fill=\ConvColor,
+        height=48,
+        width=2.5,
+        depth=48
+        }
+    };
+
+\draw [connection]  (input-east)    -- node {\midarrow} (conv1-west);
+
+\node[text width=8cm, align=center] at (2,5,0) {\tiny 256 params};
+
+\pic[shift={(0.3,0,0)}] at (conv1-east) 
+    {Box={
+        name=bn1,
+        caption=BN,
+        xlabel={{16}},
+        zlabel=96,
+        fill=\BNColor,
+        height=48,
+        width=0.5,
+        depth=48,
+        opacity=0.7
+        }
+    };
+
+\draw [connection]  (conv1-east)    -- node {\midarrow} (bn1-west);
+
+\pic[shift={(0.3,0,0)}] at (bn1-east) 
+    {Box={
+        name=relu1,
+        caption=ReLU,
+        xlabel={{16, }},
+        zlabel=96,
+        fill=\ConvColor,
+        height=48,
+        width=0.3,
+        depth=48
+        }
+    };
+
+\draw [connection]  (bn1-east)    -- node {\midarrow} (relu1-west);
+
+\pic[shift={ (0.5,0,0) }] at (relu1-east) 
+    {Box={
+        name=pool1,
+        caption=MaxPool\\k=2,
+        fill=\PoolColor,
+        opacity=0.6,
+        height=42,
+        width=1.5,
+        depth=42
+        }
+    };
+
+\draw [connection]  (relu1-east)    -- node {\midarrow} (pool1-west);
+
+\pic[shift={(0.3,0,0)}] at (pool1-east) 
+    {Box={
+        name=drop1,
+        caption=Drop\\0.3,
+        xlabel={{16}},
+        zlabel=48,
+        fill=\DropoutColor,
+        height=42,
+        width=0.3,
+        depth=42,
+        opacity=0.4
+        }
+    };
+
+\draw [connection]  (pool1-east)    -- node {\midarrow} (drop1-west);
+
+\node[text width=8cm, align=center] at (7.5,-4,0) {\tiny (16, 48)};
+
+\pic[shift={(2,0,0)}] at (drop1-east) 
+    {Box={
+        name=conv2,
+        caption=Conv1D\\k=3,
+        xlabel={{32, }},
+        zlabel=46,
+        fill=\ConvColor,
+        height=38,
+        width=3,
+        depth=38
+        }
+    };
+
+\draw [connection]  (drop1-east)    -- node {\midarrow} (conv2-west);
+
+\node[text width=8cm, align=center] at (10,5,0) {\tiny 1,568 params};
+
+\pic[shift={(0.3,0,0)}] at (conv2-east) 
+    {Box={
+        name=bn2,
+        caption=BN,
+        xlabel={{32}},
+        zlabel=46,
+        fill=\BNColor,
+        height=38,
+        width=0.5,
+        depth=38,
+        opacity=0.7
+        }
+    };
+
+\draw [connection]  (conv2-east)    -- node {\midarrow} (bn2-west);
+
+\pic[shift={(0.3,0,0)}] at (bn2-east) 
+    {Box={
+        name=relu2,
+        caption=ReLU,
+        xlabel={{32, }},
+        zlabel=46,
+        fill=\ConvColor,
+        height=38,
+        width=0.3,
+        depth=38
+        }
+    };
+
+\draw [connection]  (bn2-east)    -- node {\midarrow} (relu2-west);
+
+\pic[shift={ (0.5,0,0) }] at (relu2-east) 
+    {Box={
+        name=pool2,
+        caption=MaxPool\\k=2,
+        fill=\PoolColor,
+        opacity=0.6,
+        height=30,
+        width=1.5,
+        depth=30
+        }
+    };
+
+\draw [connection]  (relu2-east)    -- node {\midarrow} (pool2-west);
+
+\pic[shift={(0.3,0,0)}] at (pool2-east) 
+    {Box={
+        name=drop2,
+        caption=Drop\\0.3,
+        xlabel={{32}},
+        zlabel=23,
+        fill=\DropoutColor,
+        height=30,
+        width=0.3,
+        depth=30,
+        opacity=0.4
+        }
+    };
+
+\draw [connection]  (pool2-east)    -- node {\midarrow} (drop2-west);
+
+\node[text width=8cm, align=center] at (15.5,-4,0) {\tiny (32, 23)};
+
+\pic[shift={(2,0,0)}] at (drop2-east) 
+    {Box={
+        name=flatten,
+        caption=Flatten\\736,
+        xlabel={{736}},
+        fill={rgb:gray,3;white,7},
+        height=20,
+        width=1.5,
+        depth=20,
+        opacity=0.6
+        }
+    };
+
+\draw [connection]  (drop2-east)    -- node {\midarrow} (flatten-west);
+
+\pic[shift={(3,3,0)}] at (flatten-east) 
+    {Box={
+        name=fc_quantum,
+        caption=FC\\736→2,
+        xlabel={{2}},
+        zlabel=736,
+        fill=\QuantumColor,
+        height=12,
+        width=2.5,
+        depth=12,
+        opacity=0.8
+        }
+    };
+
+\draw [connection]  (flatten-east)    -- node {\midarrow} (fc_quantum-west);
+
+\pic[shift={(1.5,0,0)}] at (fc_quantum-east) 
+    {Box={
+        name=quantum_out,
+        caption=Tanh×π\\Quantum,
+        xlabel={{2}},
+        fill=\QuantumColor,
+        height=10,
+        width=2,
+        depth=10,
+        opacity=0.9
+        }
+    };
+
+\draw [connection]  (fc_quantum-east)    -- node {\midarrow} (quantum_out-west);
+
+\node[text width=8cm, align=center] at (24,4,0) {\tiny Range: [-π, π]\\Parameters for\\quantum circuit};
+
+\node[text width=8cm, align=center] at (20.5,6,0) {\tiny 1,474 params};
+
+\pic[shift={(3,-3,0)}] at (flatten-east) 
+    {Box={
+        name=fc_sel1,
+        caption=FC\\736→64,
+        xlabel={{64}},
+        zlabel=736,
+        fill=\SelectorColor,
+        height=14,
+        width=2,
+        depth=14,
+        opacity=0.8
+        }
+    };
+
+\draw [connection]  (flatten-east)    -- node {\midarrow} (fc_sel1-west);
+
+\node[text width=8cm, align=center] at (20.5,-6,0) {\tiny 47,168 params};
+
+\pic[shift={(0.5,0,0)}] at (fc_sel1-east) 
+    {Box={
+        name=relu_sel,
+        caption=ReLU,
+        xlabel={{1, }},
+        zlabel=64,
+        fill=\ConvColor,
+        height=14,
+        width=0.3,
+        depth=14
+        }
+    };
+
+\draw [connection]  (fc_sel1-east)    -- node {\midarrow} (relu_sel-west);
+
+\pic[shift={(0.3,0,0)}] at (relu_sel-east) 
+    {Box={
+        name=drop_sel,
+        caption=Drop\\0.2,
+        xlabel={{1}},
+        zlabel=64,
+        fill=\DropoutColor,
+        height=14,
+        width=0.3,
+        depth=14,
+        opacity=0.4
+        }
+    };
+
+\draw [connection]  (relu_sel-east)    -- node {\midarrow} (drop_sel-west);
+
+\pic[shift={(1,0,0)}] at (drop_sel-east) 
+    {Box={
+        name=fc_sel2,
+        caption=FC\\64→3,
+        xlabel={{3}},
+        zlabel=64,
+        fill=\SelectorColor,
+        height=10,
+        width=2,
+        depth=10,
+        opacity=0.8
+        }
+    };
+
+\draw [connection]  (drop_sel-east)    -- node {\midarrow} (fc_sel2-west);
+
+\node[text width=8cm, align=center] at (22.5,-2.5,0) {\tiny 195 params};
+
+\pic[shift={(1.5,0,0)}] at (fc_sel2-east) 
+    {Box={
+        name=selector_out,
+        caption=Softmax\\Selector,
+        xlabel={{3}},
+        fill=\SelectorColor,
+        height=9,
+        width=2,
+        depth=9,
+        opacity=0.9
+        }
+    };
+
+\draw [connection]  (fc_sel2-east)    -- node {\midarrow} (selector_out-west);
+
+\node[text width=8cm, align=center] at (26,-3,0) {\tiny Probabilities for:\\Z, ZZ, Pauli\\feature maps};
+
+\node[text width=8cm, align=center] at (12,-7,0) {\textbf{Total Parameters: 50,757}};
+
+\node[text width=8cm, align=center] at (12,-8,0) {\tiny Receptive Field: 28 bases};
+
+\end{tikzpicture}
+\end{document}

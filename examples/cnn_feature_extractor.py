@@ -5,7 +5,8 @@ for genomic sequence classification with quantum feature parameters.
 """
 
 import sys
-sys.path.append('../')
+import os
+sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), '../'))
 from pycore.tikzeng import *
 
 # Custom color definitions for genomic/quantum CNN
@@ -31,7 +32,7 @@ def to_BatchNorm(name, s_filer=256, n_filer=64, offset="(0,0,0)", to="(0,0,0)",
         caption="""+ caption +r""",
         xlabel={{"""+ str(n_filer) +"""}},
         zlabel="""+ str(s_filer) +""",
-        fill=\BNColor,
+        fill=\\BNColor,
         height="""+ str(height) +""",
         width="""+ str(width) +""",
         depth="""+ str(depth) +""",
@@ -50,7 +51,7 @@ def to_Dropout(name, s_filer=256, n_filer=64, offset="(0,0,0)", to="(0,0,0)",
         caption="""+ caption +r""",
         xlabel={{"""+ str(n_filer) +"""}},
         zlabel="""+ str(s_filer) +""",
-        fill=\DropoutColor,
+        fill=\\DropoutColor,
         height="""+ str(height) +""",
         width="""+ str(width) +""",
         depth="""+ str(depth) +""",
@@ -87,7 +88,7 @@ def to_FC_Quantum(name, n_input=736, n_output=2, offset="(0,0,0)", to="(0,0,0)",
         caption="""+ caption +r""",
         xlabel={{"""+ str(n_output) +"""}},
         zlabel="""+ str(n_input) +""",
-        fill=\QuantumColor,
+        fill=\\QuantumColor,
         height="""+ str(height) +""",
         width="""+ str(width) +""",
         depth="""+ str(depth) +""",
@@ -106,7 +107,7 @@ def to_FC_Selector(name, n_input=736, n_output=64, offset="(0,0,0)", to="(0,0,0)
         caption="""+ caption +r""",
         xlabel={{"""+ str(n_output) +"""}},
         zlabel="""+ str(n_input) +""",
-        fill=\SelectorColor,
+        fill=\\SelectorColor,
         height="""+ str(height) +""",
         width="""+ str(width) +""",
         depth="""+ str(depth) +""",
@@ -117,7 +118,7 @@ def to_FC_Selector(name, n_input=736, n_output=64, offset="(0,0,0)", to="(0,0,0)
 
 # Output node representation
 def to_Output(name, n_output=2, offset="(0,0,0)", to="(0,0,0)", 
-              width=1.5, height=6, depth=6, caption="Output", color="\QuantumColor"):
+              width=1.5, height=6, depth=6, caption="Output", color="\\QuantumColor"):
     return r"""
 \pic[shift={"""+ offset +"""}] at """+ to +""" 
     {Box={
@@ -234,7 +235,7 @@ arch = [
     
     # Tanh * π activation
     to_Output("quantum_out", n_output=2, offset="(1.5,0,0)", to="(fc_quantum-east)", 
-              width=2, height=10, depth=10, caption="Tanh×π\\\\Quantum", color="\QuantumColor"),
+              width=2, height=10, depth=10, caption="Tanh×π\\\\Quantum", color="\\QuantumColor"),
     to_connection("fc_quantum", "quantum_out"),
     
     # Annotation for quantum output
@@ -269,7 +270,7 @@ arch = [
     
     # Softmax output
     to_Output("selector_out", n_output=3, offset="(1.5,0,0)", to="(fc_sel2-east)", 
-              width=2, height=9, depth=9, caption="Softmax\\\\Selector", color="\SelectorColor"),
+              width=2, height=9, depth=9, caption="Softmax\\\\Selector", color="\\SelectorColor"),
     to_connection("fc_sel2", "selector_out"),
     
     # Annotation for selector output
