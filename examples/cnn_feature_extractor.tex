@@ -81,14 +81,14 @@
         zlabel=96,
         fill=\ConvColor,
         height=48,
-        width=0.3,
+        width=1.0,
         depth=48
         }
     };
 
 \draw [connection]  (bn1-east)    -- node {\midarrow} (relu1-west);
 
-\pic[shift={ (1.0,0,0) }] at (relu1-east) 
+\pic[shift={ (1.5,0,0) }] at (relu1-east) 
     {Box={
         name=pool1,
         caption=MaxPool\\k=2,
@@ -102,7 +102,7 @@
 
 \draw [connection]  (relu1-east)    -- node {\midarrow} (pool1-west);
 
-\pic[shift={(0.8,0,0)}] at (pool1-east) 
+\pic[shift={(1.2,0,0)}] at (pool1-east) 
     {Box={
         name=drop1,
         caption=Drop\\0.3,
@@ -161,14 +161,14 @@
         zlabel=46,
         fill=\ConvColor,
         height=38,
-        width=0.3,
+        width=1.0,
         depth=38
         }
     };
 
 \draw [connection]  (bn2-east)    -- node {\midarrow} (relu2-west);
 
-\pic[shift={ (1.0,0,0) }] at (relu2-east) 
+\pic[shift={ (1.5,0,0) }] at (relu2-east) 
     {Box={
         name=pool2,
         caption=MaxPool\\k=2,
@@ -182,7 +182,7 @@
 
 \draw [connection]  (relu2-east)    -- node {\midarrow} (pool2-west);
 
-\pic[shift={(0.8,0,0)}] at (pool2-east) 
+\pic[shift={(1.2,0,0)}] at (pool2-east) 
     {Box={
         name=drop2,
         caption=Drop\\0.3,
@@ -190,7 +190,7 @@
         zlabel=23,
         fill=\DropoutColor,
         height=30,
-        width=0.3,
+        width=0.8,
         depth=30,
         opacity=0.4
         }
