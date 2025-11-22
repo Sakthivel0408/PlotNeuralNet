@@ -173,27 +173,27 @@ arch = [
     to_layer_annotation(r"\tiny 256 params", "conv1", anchor="north", yshift="0.5cm"),
     
     # BatchNorm1D
-    to_BatchNorm("bn1", s_filer=96, n_filer=16, offset="(0.3,0,0)", to="(conv1-east)", 
+    to_BatchNorm("bn1", s_filer=96, n_filer=16, offset="(0.8,0,0)", to="(conv1-east)", 
                  width=0.5, height=48, depth=48, caption="BN"),
     to_connection("conv1", "bn1"),
     
     # ReLU (represented as slightly different color band)
-    to_Conv("relu1", s_filer=96, n_filer=16, offset="(0.3,0,0)", to="(bn1-east)", 
+    to_Conv("relu1", s_filer=96, n_filer=16, offset="(0.8,0,0)", to="(bn1-east)", 
             height=48, depth=48, width=0.3, caption="ReLU"),
     to_connection("bn1", "relu1"),
     
     # MaxPool (96 -> 48)
-    to_Pool("pool1", offset="(0.5,0,0)", to="(relu1-east)", 
+    to_Pool("pool1", offset="(1.0,0,0)", to="(relu1-east)", 
             width=1.5, height=42, depth=42, opacity=0.6, caption="MaxPool\\\\k=2"),
     to_connection("relu1", "pool1"),
     
     # Dropout (p=0.3)
-    to_Dropout("drop1", s_filer=48, n_filer=16, offset="(0.3,0,0)", to="(pool1-east)", 
+    to_Dropout("drop1", s_filer=48, n_filer=16, offset="(0.8,0,0)", to="(pool1-east)", 
                width=0.3, height=42, depth=42, caption="Drop\\\\0.3"),
     to_connection("pool1", "drop1"),
     
-    # Output shape annotation
-    to_annotation(r"\tiny (16, 48)", "(8.5,-6,0)"),
+    # Output shape annotation - positioned below drop1 layer
+    to_layer_annotation(r"\tiny (16, 48)", "drop1", anchor="south", yshift="-0.8cm"),
     
     # ===== SECOND CONVOLUTIONAL BLOCK =====
     # Conv1D: 16 -> 32 channels, kernel=3
@@ -205,27 +205,27 @@ arch = [
     to_layer_annotation(r"\tiny 1,568 params", "conv2", anchor="north", yshift="0.5cm"),
     
     # BatchNorm1D
-    to_BatchNorm("bn2", s_filer=46, n_filer=32, offset="(0.3,0,0)", to="(conv2-east)", 
+    to_BatchNorm("bn2", s_filer=46, n_filer=32, offset="(0.8,0,0)", to="(conv2-east)", 
                  width=0.5, height=38, depth=38, caption="BN"),
     to_connection("conv2", "bn2"),
     
     # ReLU
-    to_Conv("relu2", s_filer=46, n_filer=32, offset="(0.3,0,0)", to="(bn2-east)", 
+    to_Conv("relu2", s_filer=46, n_filer=32, offset="(0.8,0,0)", to="(bn2-east)", 
             height=38, depth=38, width=0.3, caption="ReLU"),
     to_connection("bn2", "relu2"),
     
     # MaxPool (46 -> 23)
-    to_Pool("pool2", offset="(0.5,0,0)", to="(relu2-east)", 
+    to_Pool("pool2", offset="(1.0,0,0)", to="(relu2-east)", 
             width=1.5, height=30, depth=30, opacity=0.6, caption="MaxPool\\\\k=2"),
     to_connection("relu2", "pool2"),
     
     # Dropout (p=0.3)
-    to_Dropout("drop2", s_filer=23, n_filer=32, offset="(0.3,0,0)", to="(pool2-east)", 
+    to_Dropout("drop2", s_filer=23, n_filer=32, offset="(0.8,0,0)", to="(pool2-east)", 
                width=0.3, height=30, depth=30, caption="Drop\\\\0.3"),
     to_connection("pool2", "drop2"),
     
-    # Output shape annotation
-    to_annotation(r"\tiny (32, 23)", "(17,-6,0)"),
+    # Output shape annotation - positioned below drop2 layer
+    to_layer_annotation(r"\tiny (32, 23)", "drop2", anchor="south", yshift="-0.8cm"),
     
     # ===== FLATTEN LAYER =====
     to_Flatten("flatten", offset="(2.5,0,0)", to="(drop2-east)", 

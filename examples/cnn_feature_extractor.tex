@@ -57,7 +57,7 @@
 
 \node[text width=6cm, align=center, yshift=0.5cm, xshift=0cm] at (conv1-north) {\tiny 256 params};
 
-\pic[shift={(0.3,0,0)}] at (conv1-east) 
+\pic[shift={(0.8,0,0)}] at (conv1-east) 
     {Box={
         name=bn1,
         caption=BN,
@@ -73,7 +73,7 @@
 
 \draw [connection]  (conv1-east)    -- node {\midarrow} (bn1-west);
 
-\pic[shift={(0.3,0,0)}] at (bn1-east) 
+\pic[shift={(0.8,0,0)}] at (bn1-east) 
     {Box={
         name=relu1,
         caption=ReLU,
@@ -88,7 +88,7 @@
 
 \draw [connection]  (bn1-east)    -- node {\midarrow} (relu1-west);
 
-\pic[shift={ (0.5,0,0) }] at (relu1-east) 
+\pic[shift={ (1.0,0,0) }] at (relu1-east) 
     {Box={
         name=pool1,
         caption=MaxPool\\k=2,
@@ -102,7 +102,7 @@
 
 \draw [connection]  (relu1-east)    -- node {\midarrow} (pool1-west);
 
-\pic[shift={(0.3,0,0)}] at (pool1-east) 
+\pic[shift={(0.8,0,0)}] at (pool1-east) 
     {Box={
         name=drop1,
         caption=Drop\\0.3,
@@ -118,7 +118,7 @@
 
 \draw [connection]  (pool1-east)    -- node {\midarrow} (drop1-west);
 
-\node[text width=8cm, align=center] at (8.5,-6,0) {\tiny (16, 48)};
+\node[text width=6cm, align=center, yshift=-0.8cm, xshift=0cm] at (drop1-south) {\tiny (16, 48)};
 
 \pic[shift={(2.5,0,0)}] at (drop1-east) 
     {Box={
@@ -137,7 +137,7 @@
 
 \node[text width=6cm, align=center, yshift=0.5cm, xshift=0cm] at (conv2-north) {\tiny 1,568 params};
 
-\pic[shift={(0.3,0,0)}] at (conv2-east) 
+\pic[shift={(0.8,0,0)}] at (conv2-east) 
     {Box={
         name=bn2,
         caption=BN,
@@ -153,7 +153,7 @@
 
 \draw [connection]  (conv2-east)    -- node {\midarrow} (bn2-west);
 
-\pic[shift={(0.3,0,0)}] at (bn2-east) 
+\pic[shift={(0.8,0,0)}] at (bn2-east) 
     {Box={
         name=relu2,
         caption=ReLU,
@@ -168,7 +168,7 @@
 
 \draw [connection]  (bn2-east)    -- node {\midarrow} (relu2-west);
 
-\pic[shift={ (0.5,0,0) }] at (relu2-east) 
+\pic[shift={ (1.0,0,0) }] at (relu2-east) 
     {Box={
         name=pool2,
         caption=MaxPool\\k=2,
@@ -182,7 +182,7 @@
 
 \draw [connection]  (relu2-east)    -- node {\midarrow} (pool2-west);
 
-\pic[shift={(0.3,0,0)}] at (pool2-east) 
+\pic[shift={(0.8,0,0)}] at (pool2-east) 
     {Box={
         name=drop2,
         caption=Drop\\0.3,
@@ -198,7 +198,7 @@
 
 \draw [connection]  (pool2-east)    -- node {\midarrow} (drop2-west);
 
-\node[text width=8cm, align=center] at (17,-6,0) {\tiny (32, 23)};
+\node[text width=6cm, align=center, yshift=-0.8cm, xshift=0cm] at (drop2-south) {\tiny (32, 23)};
 
 \pic[shift={(2.5,0,0)}] at (drop2-east) 
     {Box={
