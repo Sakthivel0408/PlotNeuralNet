@@ -140,6 +140,12 @@ def to_annotation(text, position="(0,10,0)"):
 \node[text width=8cm, align=center] at """ + position + r""" {""" + text + r"""};
 """
 
+# Annotation relative to a layer
+def to_layer_annotation(text, layer_name, anchor="north", yshift="0.8cm", xshift="0cm"):
+    return r"""
+\node[text width=6cm, align=center, yshift=""" + yshift + r""", xshift=""" + xshift + r"""] at (""" + layer_name + r"""-""" + anchor + r""") {""" + text + r"""};
+"""
+
 # Main architecture definition
 arch = [
     to_head('..'),
@@ -155,16 +161,16 @@ arch = [
             height=50, depth=50, width=1.5, caption="Input\\\\3×100"),
     
     # Annotation for input channels
-    to_annotation(r"\tiny Ch0: Base\\Ch1: Pu/Py\\Ch2: H-Bond", "(-3,0,0)"),
+    to_annotation(r"\tiny Ch0: Base\\Ch1: Pu/Py\\Ch2: H-Bond", "(-4.5,0,0)"),
     
     # ===== FIRST CONVOLUTIONAL BLOCK =====
     # Conv1D: 3 -> 16 channels, kernel=5
-    to_Conv("conv1", s_filer=96, n_filer=16, offset="(2,0,0)", to="(input-east)", 
+    to_Conv("conv1", s_filer=96, n_filer=16, offset="(2.5,0,0)", to="(input-east)", 
             height=48, depth=48, width=2.5, caption="Conv1D\\\\k=5"),
     to_connection("input", "conv1"),
     
-    # Parameters annotation
-    to_annotation(r"\tiny 256 params", "(2,6,0)"),
+    # Parameters annotation - positioned above conv1 layer
+    to_layer_annotation(r"\tiny 256 params", "conv1", anchor="north", yshift="0.5cm"),
     
     # BatchNorm1D
     to_BatchNorm("bn1", s_filer=96, n_filer=16, offset="(0.3,0,0)", to="(conv1-east)", 
@@ -187,16 +193,16 @@ arch = [
     to_connection("pool1", "drop1"),
     
     # Output shape annotation
-    to_annotation(r"\tiny (16, 48)", "(7.5,-5,0)"),
+    to_annotation(r"\tiny (16, 48)", "(8.5,-6,0)"),
     
     # ===== SECOND CONVOLUTIONAL BLOCK =====
     # Conv1D: 16 -> 32 channels, kernel=3
-    to_Conv("conv2", s_filer=46, n_filer=32, offset="(2,0,0)", to="(drop1-east)", 
+    to_Conv("conv2", s_filer=46, n_filer=32, offset="(2.5,0,0)", to="(drop1-east)", 
             height=38, depth=38, width=3, caption="Conv1D\\\\k=3"),
     to_connection("drop1", "conv2"),
     
-    # Parameters annotation
-    to_annotation(r"\tiny 1,568 params", "(10,6.5,0)"),
+    # Parameters annotation - positioned above conv2 layer
+    to_layer_annotation(r"\tiny 1,568 params", "conv2", anchor="north", yshift="0.5cm"),
     
     # BatchNorm1D
     to_BatchNorm("bn2", s_filer=46, n_filer=32, offset="(0.3,0,0)", to="(conv2-east)", 
@@ -219,66 +225,68 @@ arch = [
     to_connection("pool2", "drop2"),
     
     # Output shape annotation
-    to_annotation(r"\tiny (32, 23)", "(15.5,-5,0)"),
+    to_annotation(r"\tiny (32, 23)", "(17,-6,0)"),
     
     # ===== FLATTEN LAYER =====
-    to_Flatten("flatten", offset="(2,0,0)", to="(drop2-east)", 
+    to_Flatten("flatten", offset="(2.5,0,0)", to="(drop2-east)", 
                 width=1.5, height=20, depth=20, n_features=736, caption="Flatten\\\\736"),
     to_connection("drop2", "flatten"),
     
     # ===== DUAL OUTPUT BRANCHES =====
     
     # --- Branch 1: Quantum Parameters ---
-    to_FC_Quantum("fc_quantum", n_input=736, n_output=2, offset="(3,3,0)", to="(flatten-east)", 
+    to_FC_Quantum("fc_quantum", n_input=736, n_output=2, offset="(3.5,4.5,0)", to="(flatten-east)", 
                   width=2.5, height=12, depth=12, caption="FC\\\\736→2"),
     to_connection("flatten", "fc_quantum"),
     
+    # Parameters annotation - positioned above fc_quantum layer
+    to_layer_annotation(r"\tiny 1,474 params", "fc_quantum", anchor="north", yshift="0.5cm"),
+    
     # Tanh * π activation
-    to_Output("quantum_out", n_output=2, offset="(1.5,0,0)", to="(fc_quantum-east)", 
+    to_Output("quantum_out", n_output=2, offset="(2,0,0)", to="(fc_quantum-east)", 
               width=2, height=10, depth=10, caption="Tanh×π\\\\Quantum", color="\\QuantumColor"),
     to_connection("fc_quantum", "quantum_out"),
     
-    # Annotation for quantum output
-    to_annotation(r"\tiny Range: [-π, π]\\Parameters for\\quantum circuit", "(25,4,0)"),
-    to_annotation(r"\tiny 1,474 params", "(20.5,7,0)"),
+    # Annotation for quantum output - positioned to the right of quantum_out
+    to_layer_annotation(r"\tiny Range: [-π, π]\\Parameters for\\quantum circuit", "quantum_out", anchor="east", yshift="0cm", xshift="1.5cm"),
     
     # --- Branch 2: Feature Map Selector ---
-    to_FC_Selector("fc_sel1", n_input=736, n_output=64, offset="(3,-3,0)", to="(flatten-east)", 
+    to_FC_Selector("fc_sel1", n_input=736, n_output=64, offset="(3.5,-4.5,0)", to="(flatten-east)", 
                    width=2, height=14, depth=14, caption="FC\\\\736→64"),
     to_connection("flatten", "fc_sel1"),
     
-    # Annotation
-    to_annotation(r"\tiny 47,168 params", "(20.5,-7,0)"),
+    # Parameters annotation - positioned below fc_sel1 layer
+    to_layer_annotation(r"\tiny 47,168 params", "fc_sel1", anchor="south", yshift="-0.5cm"),
     
     # ReLU
-    to_Conv("relu_sel", s_filer=64, n_filer=1, offset="(0.5,0,0)", to="(fc_sel1-east)", 
+    to_Conv("relu_sel", s_filer=64, n_filer=1, offset="(0.6,0,0)", to="(fc_sel1-east)", 
             height=14, depth=14, width=0.3, caption="ReLU"),
     to_connection("fc_sel1", "relu_sel"),
     
     # Dropout (p=0.2)
-    to_Dropout("drop_sel", s_filer=64, n_filer=1, offset="(0.3,0,0)", to="(relu_sel-east)", 
+    to_Dropout("drop_sel", s_filer=64, n_filer=1, offset="(0.4,0,0)", to="(relu_sel-east)", 
                width=0.3, height=14, depth=14, caption="Drop\\\\0.2"),
     to_connection("relu_sel", "drop_sel"),
     
     # FC: 64 -> 3
-    to_FC_Selector("fc_sel2", n_input=64, n_output=3, offset="(1,0,0)", to="(drop_sel-east)", 
+    to_FC_Selector("fc_sel2", n_input=64, n_output=3, offset="(1.2,0,0)", to="(drop_sel-east)", 
                    width=2, height=10, depth=10, caption="FC\\\\64→3"),
     to_connection("drop_sel", "fc_sel2"),
     
-    # Annotation
-    to_annotation(r"\tiny 195 params", "(22.5,-1.5,0)"),
+    # Parameters annotation - positioned above fc_sel2 layer
+    to_layer_annotation(r"\tiny 195 params", "fc_sel2", anchor="north", yshift="0.5cm"),
     
     # Softmax output
-    to_Output("selector_out", n_output=3, offset="(1.5,0,0)", to="(fc_sel2-east)", 
+    to_Output("selector_out", n_output=3, offset="(2,0,0)", to="(fc_sel2-east)", 
               width=2, height=9, depth=9, caption="Softmax\\\\Selector", color="\\SelectorColor"),
     to_connection("fc_sel2", "selector_out"),
     
-    # Annotation for selector output
-    to_annotation(r"\tiny Probabilities for:\\Z, ZZ, Pauli\\feature maps", "(27,-3,0)"),
+    # Annotation for selector output - positioned to the right of selector_out
+    to_layer_annotation(r"\tiny Probabilities for:\\Z, ZZ, Pauli\\feature maps", "selector_out", anchor="east", yshift="0cm", xshift="1.5cm"),
     
     # ===== SUMMARY ANNOTATIONS =====
-    to_annotation(r"\textbf{Total Parameters: 50,757}", "(12,-8,0)"),
-    to_annotation(r"\tiny Receptive Field: 28 bases", "(12,-9,0)"),
+    to_annotation(r"\textbf{Total Parameters: 50,757}", "(15,-10.5,0)"),
+    to_annotation(r"\tiny Receptive Field: 28 bases", "(15,-11.5,0)"),
     
     to_end()
 ]
