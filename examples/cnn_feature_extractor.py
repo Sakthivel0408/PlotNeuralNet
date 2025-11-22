@@ -161,7 +161,10 @@ arch = [
             height=50, depth=50, width=1.5, caption="Input\\\\3×100"),
     
     # Annotation for input channels
-    to_annotation(r"\tiny Ch0: Base\\Ch1: Pu/Py\\Ch2: H-Bond", "(-4.5,0,0)"),
+    to_annotation(r"\tiny \textbf{Input Channels:}", "(-4.5,1.5,0)"),
+    to_annotation(r"\tiny Ch0: Base", "(-4.5,0.5,0)"),
+    to_annotation(r"\tiny Ch1: Pu/Py", "(-4.5,-0.5,0)"),
+    to_annotation(r"\tiny Ch2: H-Bond", "(-4.5,-1.5,0)"),
     
     # ===== FIRST CONVOLUTIONAL BLOCK =====
     # Conv1D: 3 -> 16 channels, kernel=5
