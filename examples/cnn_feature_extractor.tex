@@ -73,7 +73,7 @@
 
 \draw [connection]  (conv1-east)    -- node {\midarrow} (bn1-west);
 
-\pic[shift={(0.8,0,0)}] at (bn1-east) 
+\pic[shift={(1.2,0,0)}] at (bn1-east) 
     {Box={
         name=relu1,
         caption=ReLU,
@@ -153,7 +153,7 @@
 
 \draw [connection]  (conv2-east)    -- node {\midarrow} (bn2-west);
 
-\pic[shift={(0.8,0,0)}] at (bn2-east) 
+\pic[shift={(1.2,0,0)}] at (bn2-east) 
     {Box={
         name=relu2,
         caption=ReLU,
@@ -218,8 +218,8 @@
 \pic[shift={(3.5,4.5,0)}] at (flatten-east) 
     {Box={
         name=fc_quantum,
-        caption=FC\\736→2,
-        xlabel={{2}},
+        caption=FC\\736→4,
+        xlabel={{4}},
         zlabel=736,
         fill=\QuantumColor,
         height=12,
@@ -231,13 +231,13 @@
 
 \draw [connection]  (flatten-east)    -- node {\midarrow} (fc_quantum-west);
 
-\node[text width=6cm, align=center, yshift=0.5cm, xshift=0cm] at (fc_quantum-north) {\tiny 1,474 params};
+\node[text width=6cm, align=center, yshift=0.5cm, xshift=0cm] at (fc_quantum-north) {\tiny 2,948 params};
 
 \pic[shift={(2,0,0)}] at (fc_quantum-east) 
     {Box={
         name=quantum_out,
         caption=Tanh×π\\Quantum,
-        xlabel={{2}},
+        xlabel={{4}},
         fill=\QuantumColor,
         height=10,
         width=2,
@@ -268,11 +268,11 @@
 
 \node[text width=6cm, align=center, yshift=-0.5cm, xshift=0cm] at (fc_sel1-south) {\tiny 47,168 params};
 
-\pic[shift={(0.6,0,0)}] at (fc_sel1-east) 
+\pic[shift={(1.0,0,0)}] at (fc_sel1-east) 
     {Box={
         name=relu_sel,
         caption=ReLU,
-        xlabel={{1, }},
+        xlabel={{64, }},
         zlabel=64,
         fill=\ConvColor,
         height=14,
@@ -334,7 +334,7 @@
 
 \node[text width=6cm, align=center, yshift=0cm, xshift=1.5cm] at (selector_out-east) {\tiny Probabilities for:\\Z, ZZ, Pauli\\feature maps};
 
-\node[text width=8cm, align=center] at (15,-10.5,0) {\textbf{Total Parameters: 50,757}};
+\node[text width=8cm, align=center] at (15,-10.5,0) {\textbf{Total Parameters: 52,231}};
 
 \node[text width=8cm, align=center] at (15,-11.5,0) {\tiny Receptive Field: 28 bases};
 

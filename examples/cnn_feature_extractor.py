@@ -178,7 +178,7 @@ arch = [
     to_connection("conv1", "bn1"),
     
     # ReLU (represented as slightly different color band)
-    to_Conv("relu1", s_filer=96, n_filer=16, offset="(0.8,0,0)", to="(bn1-east)", 
+    to_Conv("relu1", s_filer=96, n_filer=16, offset="(1.2,0,0)", to="(bn1-east)", 
             height=48, depth=48, width=0.3, caption="ReLU"),
     to_connection("bn1", "relu1"),
     
@@ -210,7 +210,7 @@ arch = [
     to_connection("conv2", "bn2"),
     
     # ReLU
-    to_Conv("relu2", s_filer=46, n_filer=32, offset="(0.8,0,0)", to="(bn2-east)", 
+    to_Conv("relu2", s_filer=46, n_filer=32, offset="(1.2,0,0)", to="(bn2-east)", 
             height=38, depth=38, width=0.3, caption="ReLU"),
     to_connection("bn2", "relu2"),
     
@@ -235,15 +235,15 @@ arch = [
     # ===== DUAL OUTPUT BRANCHES =====
     
     # --- Branch 1: Quantum Parameters ---
-    to_FC_Quantum("fc_quantum", n_input=736, n_output=2, offset="(3.5,4.5,0)", to="(flatten-east)", 
-                  width=2.5, height=12, depth=12, caption="FC\\\\736→2"),
+    to_FC_Quantum("fc_quantum", n_input=736, n_output=4, offset="(3.5,4.5,0)", to="(flatten-east)", 
+                  width=2.5, height=12, depth=12, caption="FC\\\\736→4"),
     to_connection("flatten", "fc_quantum"),
     
     # Parameters annotation - positioned above fc_quantum layer
-    to_layer_annotation(r"\tiny 1,474 params", "fc_quantum", anchor="north", yshift="0.5cm"),
+    to_layer_annotation(r"\tiny 2,948 params", "fc_quantum", anchor="north", yshift="0.5cm"),
     
     # Tanh * π activation
-    to_Output("quantum_out", n_output=2, offset="(2,0,0)", to="(fc_quantum-east)", 
+    to_Output("quantum_out", n_output=4, offset="(2,0,0)", to="(fc_quantum-east)", 
               width=2, height=10, depth=10, caption="Tanh×π\\\\Quantum", color="\\QuantumColor"),
     to_connection("fc_quantum", "quantum_out"),
     
@@ -259,7 +259,7 @@ arch = [
     to_layer_annotation(r"\tiny 47,168 params", "fc_sel1", anchor="south", yshift="-0.5cm"),
     
     # ReLU
-    to_Conv("relu_sel", s_filer=64, n_filer=1, offset="(0.6,0,0)", to="(fc_sel1-east)", 
+    to_Conv("relu_sel", s_filer=64, n_filer=64, offset="(1.0,0,0)", to="(fc_sel1-east)", 
             height=14, depth=14, width=0.3, caption="ReLU"),
     to_connection("fc_sel1", "relu_sel"),
     
@@ -285,7 +285,7 @@ arch = [
     to_layer_annotation(r"\tiny Probabilities for:\\Z, ZZ, Pauli\\feature maps", "selector_out", anchor="east", yshift="0cm", xshift="1.5cm"),
     
     # ===== SUMMARY ANNOTATIONS =====
-    to_annotation(r"\textbf{Total Parameters: 50,757}", "(15,-10.5,0)"),
+    to_annotation(r"\textbf{Total Parameters: 52,231}", "(15,-10.5,0)"),
     to_annotation(r"\tiny Receptive Field: 28 bases", "(15,-11.5,0)"),
     
     to_end()
@@ -310,7 +310,7 @@ def main():
     print("  Conv2:  (batch, 32, 46)  - 1,568 params")
     print("  Pool2:  (batch, 32, 23)")
     print("  Flatten: (batch, 736)")
-    print("  Output1: (batch, 2) - Quantum Parameters")
+    print("  Output1: (batch, 4) - Quantum Parameters (num_qubits=4)")
     print("  Output2: (batch, 3) - Feature Map Probabilities")
     print(f"{'='*60}\n")
 
