@@ -188,12 +188,9 @@ arch = [
     to_connection("relu1", "pool1"),
     
     # Dropout (p=0.3)
-    to_Dropout("drop1", s_filer=48, n_filer=16, offset="(1.2,0,0)", to="(pool1-east)",
+    to_Dropout("drop1", s_filer=48, n_filer=16, offset="(1.2,0,0)", to="(pool1-east)", 
                width=0.3, height=42, depth=42, caption="Drop\\\\0.3"),
     to_connection("pool1", "drop1"),
-    
-    # Output shape annotation - positioned below drop1 layer
-    to_layer_annotation(r"\tiny (16, 48)", "drop1", anchor="south", yshift="-0.8cm"),
     
     # ===== SECOND CONVOLUTIONAL BLOCK =====
     # Conv1D: 16 -> 32 channels, kernel=3
@@ -220,12 +217,9 @@ arch = [
     to_connection("relu2", "pool2"),
     
     # Dropout (p=0.3)
-    to_Dropout("drop2", s_filer=23, n_filer=32, offset="(1.2,0,0)", to="(pool2-east)",
+    to_Dropout("drop2", s_filer=23, n_filer=32, offset="(1.2,0,0)", to="(pool2-east)", 
                width=0.8, height=30, depth=30, caption="Drop\\\\0.3"),
     to_connection("pool2", "drop2"),
-    
-    # Output shape annotation - positioned below drop2 layer
-    to_layer_annotation(r"\tiny (32, 23)", "drop2", anchor="south", yshift="-0.8cm"),
     
     # ===== FLATTEN LAYER =====
     to_Flatten("flatten", offset="(2.5,0,0)", to="(drop2-east)", 
