@@ -179,7 +179,7 @@ arch = [
     
     # ReLU (represented as slightly different color band)
     to_Conv("relu1", s_filer=96, n_filer=16, offset="(1.2,0,0)", to="(bn1-east)", 
-            height=48, depth=48, width=1.0, caption="ReLU"),
+            height=48, depth=48, width=1.5, caption="ReLU"),
     to_connection("bn1", "relu1"),
     
     # MaxPool (96 -> 48)
@@ -211,7 +211,7 @@ arch = [
     
     # ReLU
     to_Conv("relu2", s_filer=46, n_filer=32, offset="(1.2,0,0)", to="(bn2-east)", 
-            height=38, depth=38, width=1.0, caption="ReLU"),
+            height=38, depth=38, width=1.5, caption="ReLU"),
     to_connection("bn2", "relu2"),
     
     # MaxPool (46 -> 23)
