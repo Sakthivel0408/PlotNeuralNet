@@ -254,7 +254,7 @@ arch = [
     
     # ReLU
     to_Conv("relu_sel", s_filer=64, n_filer=64, offset="(1.0,0,0)", to="(fc_sel1-east)", 
-            height=14, depth=14, width=1.0, caption="ReLU"),
+            height=14, depth=14, width=1.5, caption="ReLU"),
     to_connection("fc_sel1", "relu_sel"),
     
     # Dropout (p=0.2)
