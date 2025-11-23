@@ -142,7 +142,7 @@
 \pic[shift={(2,0,0)}] at (flatten-east) 
     {Box={
         name=bridge,
-        caption=FC Bridge\\800→512,
+        caption={\small FC}\\800→512,
         xlabel={{1, }},
         zlabel=512,
         fill=\ConvColor,
@@ -157,7 +157,7 @@
 \pic[shift={(2.5,3,0)}] at (bridge-east) 
     {Box={
         name=fc_preprocess,
-        caption=FC Preprocess\\512→256,
+        caption={\small FC}\\512→256,
         xlabel={{1, }},
         zlabel=256,
         fill=\ConvColor,
@@ -187,13 +187,13 @@
 \pic[shift={(3,0,0)}] at (fc_preprocess-east) 
     {Box={
         name=quantum_layer,
-        caption=Quantum Layer\\3 Feature Maps\\(Z, ZZ, Pauli),
+        caption=Quantum\\3 Maps,
         xlabel={{2, }},
         zlabel=12,
         fill=\QuantumColor,
-        height=30,
-        width=4.5,
-        depth=30
+        height=32,
+        width=5,
+        depth=32
         }
     };
 
@@ -204,7 +204,7 @@
 \pic[shift={(3,0,0)}] at (quantum_layer-east) 
     {Box={
         name=fc_post,
-        caption=FC Post\\12→256,
+        caption={\small FC}\\12→256,
         xlabel={{1, }},
         zlabel=256,
         fill=\ConvColor,
@@ -219,7 +219,7 @@
 \pic[shift={(2,0,0)}] at (fc_post-east) 
     {Box={
         name=fc_out_quantum,
-        caption=FC Out\\256→2,
+        caption={\small FC}\\256→2,
         xlabel={{1, }},
         zlabel=2,
         fill=\ConvColor,
@@ -231,7 +231,7 @@
 
 \draw [connection]  (fc_post-east)    -- node {\midarrow} (fc_out_quantum-west);
 
-\pic[shift={(2.5,6,0)}] at (bridge-east) 
+\pic[shift={(2.5,8,0)}] at (bridge-east) 
     {Box={
         name=residual,
         caption=Residual\\512→2,

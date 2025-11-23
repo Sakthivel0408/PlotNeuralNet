@@ -111,7 +111,7 @@ arch = [
     
     # ============ BRIDGE LAYER ============
     to_Conv("bridge", s_filer=512, n_filer=1, offset="(2,0,0)", to="(flatten-east)", 
-            height=30, depth=30, width=2, caption="FC Bridge\\\\800→512"),
+            height=30, depth=30, width=2, caption="{\\small FC}\\\\800→512"),
     to_connection("flatten", "bridge"),
     
     # ============ DUAL PATH SPLIT ============
@@ -119,7 +119,7 @@ arch = [
     # === QUANTUM PATH (HybridFeatureMapQuantumCircuit) ===
     # Preprocessing
     to_Conv("fc_preprocess", s_filer=256, n_filer=1, offset="(2.5,3,0)", to="(bridge-east)", 
-            height=28, depth=28, width=2, caption="FC Preprocess\\\\512→256"),
+            height=28, depth=28, width=2, caption="{\\small FC}\\\\512→256"),
     to_connection("bridge", "fc_preprocess"),
     
     # Feature Map Selector (learnable weights)
@@ -129,22 +129,22 @@ arch = [
     
     # Quantum Layer (3 feature maps: Z, ZZ, Pauli)
     to_Quantum("quantum_layer", s_filer=12, n_filer=2, offset="(3,0,0)", to="(fc_preprocess-east)", 
-               width=4.5, height=30, depth=30, caption="Quantum Layer\\\\3 Feature Maps\\\\(Z, ZZ, Pauli)"),
+               width=5, height=32, depth=32, caption="Quantum\\\\3 Maps"),
     to_connection("fc_preprocess", "quantum_layer"),
     to_connection("selector", "quantum_layer"),
     
     # Post-quantum processing
     to_Conv("fc_post", s_filer=256, n_filer=1, offset="(3,0,0)", to="(quantum_layer-east)", 
-            height=28, depth=28, width=2, caption="FC Post\\\\12→256"),
+            height=28, depth=28, width=2, caption="{\\small FC}\\\\12→256"),
     to_connection("quantum_layer", "fc_post"),
     
     # Quantum output
     to_Conv("fc_out_quantum", s_filer=2, n_filer=1, offset="(2,0,0)", to="(fc_post-east)", 
-            height=20, depth=20, width=2, caption="FC Out\\\\256→2"),
+            height=20, depth=20, width=2, caption="{\\small FC}\\\\256→2"),
     to_connection("fc_post", "fc_out_quantum"),
     
     # === CLASSICAL RESIDUAL PATH ===
-    to_Conv("residual", s_filer=2, n_filer=1, offset="(2.5,6,0)", to="(bridge-east)", 
+    to_Conv("residual", s_filer=2, n_filer=1, offset="(2.5,8,0)", to="(bridge-east)", 
             height=20, depth=20, width=2, caption="Residual\\\\512→2"),
     to_connection("bridge", "residual"),
     
