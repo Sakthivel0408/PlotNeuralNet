@@ -79,29 +79,29 @@ arch = [
     # ============ CNN FEATURE EXTRACTOR (GenomicCNN) ============
     # Conv Block 1: 3→64
     to_Conv("conv1", s_filer=100, n_filer=64, offset="(2,0,0)", to="(input-east)", 
-            height=48, depth=48, width=2.5, caption="Conv1d\\\\3→64\\\\k=5"),
+            height=42, depth=42, width=2.5, caption="{\\small Conv1d}\\\\3→64\\\\{\\small k=5}"),
     to_connection("input", "conv1"),
     
     to_Pool("pool1", offset="(1.2,0,0)", to="(conv1-east)", 
-            width=1, height=42, depth=42, opacity=0.5, caption="MaxPool\\\\k=2"),
+            width=1, height=38, depth=38, opacity=0.5, caption="MaxPool\\\\{\\small k=2}"),
     to_connection("conv1", "pool1"),
     
     # Conv Block 2: 64→128
     to_Conv("conv2", s_filer=50, n_filer=128, offset="(2,0,0)", to="(pool1-east)", 
-            height=38, depth=38, width=3, caption="Conv1d\\\\64→128\\\\k=5"),
+            height=34, depth=34, width=3, caption="{\\small Conv1d}\\\\64→128\\\\{\\small k=5}"),
     to_connection("pool1", "conv2"),
     
     to_Pool("pool2", offset="(1.2,0,0)", to="(conv2-east)", 
-            width=1, height=32, depth=32, opacity=0.5, caption="MaxPool\\\\k=2"),
+            width=1, height=30, depth=30, opacity=0.5, caption="MaxPool\\\\{\\small k=2}"),
     to_connection("conv2", "pool2"),
     
     # Conv Block 3: 128→256
     to_Conv("conv3", s_filer=25, n_filer=256, offset="(2,0,0)", to="(pool2-east)", 
-            height=28, depth=28, width=3.5, caption="Conv1d\\\\128→256\\\\k=3"),
+            height=25, depth=25, width=3.5, caption="{\\small Conv1d}\\\\128→256\\\\{\\small k=3}"),
     to_connection("pool2", "conv3"),
     
     to_Pool("pool3", offset="(1.2,0,0)", to="(conv3-east)", 
-            width=1, height=22, depth=22, opacity=0.5, caption="MaxPool\\\\k=2"),
+            width=1, height=20, depth=20, opacity=0.5, caption="MaxPool\\\\{\\small k=2}"),
     to_connection("conv3", "pool3"),
     
     # Flatten
@@ -153,9 +153,9 @@ arch = [
     to_connection("fc_out_quantum", "fusion"),
     to_connection("residual", "fusion"),
     
-    # Quantum weight annotation (the α parameter)
+    # Fusion formula annotation - positioned directly below the fusion ball
     r"""
-\node[text width=5cm, align=center, yshift=-3cm] at (fusion-south) 
+\node[text width=6cm, align=center, yshift=-5cm] at (fusion-south) 
     {\small $\alpha \times$ quantum + $(1-\alpha) \times$ classical};
 """,
     
