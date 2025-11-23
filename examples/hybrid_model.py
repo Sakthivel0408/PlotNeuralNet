@@ -66,7 +66,7 @@ def to_LayerNorm(name, n_filer=2, offset="(0,0,0)", to="(0,0,0)", width=1.5, hei
     };
 """
 
-# Architecture for Hybrid Model with dual paths
+# Architecture for Hybrid Model matching HybridQuantumGenomicModel
 arch = [
     to_head('..'),
     to_custom_colors(),
@@ -74,107 +74,96 @@ arch = [
     
     # ============ INPUT LAYER ============
     to_Conv("input", s_filer=100, n_filer=3, offset="(0,0,0)", to="(0,0,0)", 
-            height=50, depth=50, width=1, caption="INPUT"),
+            height=50, depth=50, width=1.5, caption="Input\\\\3×100"),
     
-    # ============ CNN FEATURE EXTRACTOR ============
-    # Conv Block 1
-    to_Conv("conv1", s_filer=100, n_filer=16, offset="(2,0,0)", to="(input-east)", 
-            height=48, depth=48, width=2, caption="Conv1d(3-16)"),
+    # ============ CNN FEATURE EXTRACTOR (GenomicCNN) ============
+    # Conv Block 1: 3→64
+    to_Conv("conv1", s_filer=100, n_filer=64, offset="(2,0,0)", to="(input-east)", 
+            height=48, depth=48, width=2.5, caption="Conv1d\\\\3→64\\\\k=5"),
     to_connection("input", "conv1"),
     
-    to_Pool("pool1", offset="(0,0,0)", to="(conv1-east)", 
-            width=1, height=40, depth=40, opacity=0.5, caption="MaxPool"),
+    to_Pool("pool1", offset="(1.2,0,0)", to="(conv1-east)", 
+            width=1, height=42, depth=42, opacity=0.5, caption="MaxPool\\\\k=2"),
+    to_connection("conv1", "pool1"),
     
-    # Conv Block 2
-    to_Conv("conv2", s_filer=50, n_filer=32, offset="(1.5,0,0)", to="(pool1-east)", 
-            height=35, depth=35, width=3, caption="Conv1d(16-32)"),
+    # Conv Block 2: 64→128
+    to_Conv("conv2", s_filer=50, n_filer=128, offset="(2,0,0)", to="(pool1-east)", 
+            height=38, depth=38, width=3, caption="Conv1d\\\\64→128\\\\k=5"),
     to_connection("pool1", "conv2"),
     
-    to_Pool("pool2", offset="(0,0,0)", to="(conv2-east)", 
-            width=1, height=28, depth=28, opacity=0.5, caption="MaxPool"),
+    to_Pool("pool2", offset="(1.2,0,0)", to="(conv2-east)", 
+            width=1, height=32, depth=32, opacity=0.5, caption="MaxPool\\\\k=2"),
+    to_connection("conv2", "pool2"),
+    
+    # Conv Block 3: 128→256
+    to_Conv("conv3", s_filer=25, n_filer=256, offset="(2,0,0)", to="(pool2-east)", 
+            height=28, depth=28, width=3.5, caption="Conv1d\\\\128→256\\\\k=3"),
+    to_connection("pool2", "conv3"),
+    
+    to_Pool("pool3", offset="(1.2,0,0)", to="(conv3-east)", 
+            width=1, height=22, depth=22, opacity=0.5, caption="MaxPool\\\\k=2"),
+    to_connection("conv3", "pool3"),
     
     # Flatten
-    to_Conv("flatten", s_filer=736, n_filer=1, offset="(1,0,0)", to="(pool2-east)", 
-            height=30, depth=8, width=1, caption="Flatten"),
-    to_connection("pool2", "flatten"),
+    to_Conv("flatten", s_filer=800, n_filer=1, offset="(1.5,0,0)", to="(pool3-east)", 
+            height=25, depth=10, width=1, caption="Flatten\\\\~800"),
+    to_connection("pool3", "flatten"),
     
-    # ============ DUAL OUTPUT FROM CNN ============
-    # Quantum Parameters Branch
-    to_Conv("fc_quantum", s_filer=2, n_filer=1, offset="(2,3,0)", to="(flatten-east)", 
-            height=20, depth=20, width=2, caption="FC(736-2) Quantum"),
-    to_connection("flatten", "fc_quantum"),
+    # ============ BRIDGE LAYER ============
+    to_Conv("bridge", s_filer=512, n_filer=1, offset="(2,0,0)", to="(flatten-east)", 
+            height=30, depth=30, width=2, caption="FC Bridge\\\\800→512"),
+    to_connection("flatten", "bridge"),
     
-    # Feature Map Selector Branch
-    to_Conv("selector", s_filer=3, n_filer=1, offset="(2,-3,0)", to="(flatten-east)", 
-            height=18, depth=18, width=2.5, caption="Selector Net"),
-    to_connection("flatten", "selector"),
+    # ============ DUAL PATH SPLIT ============
     
-    # ============ PHASE 1 PATH (Classical Only) ============
-    to_Conv("classical_path", s_filer=2, n_filer=1, offset="(3,6,0)", to="(fc_quantum-east)", 
-            height=18, depth=18, width=2, caption="PHASE 1 Classical"),
+    # === QUANTUM PATH (HybridFeatureMapQuantumCircuit) ===
+    # Preprocessing
+    to_Conv("fc_preprocess", s_filer=256, n_filer=1, offset="(2.5,3,0)", to="(bridge-east)", 
+            height=28, depth=28, width=2, caption="FC Preprocess\\\\512→256"),
+    to_connection("bridge", "fc_preprocess"),
     
-    # ============ PHASE 2 PATH (Quantum) ============
-    # Quantum Layer
-    to_Quantum("quantum_layer", s_filer=23, n_filer=2, offset="(3,0,0)", to="(fc_quantum-east)", 
-               width=4, height=25, depth=25, caption="Quantum Layer"),
-    to_connection("fc_quantum", "quantum_layer"),
+    # Feature Map Selector (learnable weights)
+    to_Conv("selector", s_filer=3, n_filer=1, offset="(2.5,-3,0)", to="(bridge-east)", 
+            height=15, depth=15, width=2, caption="Selector\\\\Softmax(3)"),
+    to_connection("bridge", "selector"),
+    
+    # Quantum Layer (3 feature maps: Z, ZZ, Pauli)
+    to_Quantum("quantum_layer", s_filer=12, n_filer=2, offset="(3,0,0)", to="(fc_preprocess-east)", 
+               width=4.5, height=30, depth=30, caption="Quantum Layer\\\\3 Feature Maps\\\\(Z, ZZ, Pauli)"),
+    to_connection("fc_preprocess", "quantum_layer"),
     to_connection("selector", "quantum_layer"),
     
-    # Classical Features for Fusion
-    to_Conv("classical_features", s_filer=2, n_filer=1, offset="(0,3,0)", to="(quantum_layer-north)", 
-            height=15, depth=15, width=1.5, caption="Classical Mean"),
+    # Post-quantum processing
+    to_Conv("fc_post", s_filer=256, n_filer=1, offset="(3,0,0)", to="(quantum_layer-east)", 
+            height=28, depth=28, width=2, caption="FC Post\\\\12→256"),
+    to_connection("quantum_layer", "fc_post"),
     
-    # ============ FUSION MECHANISM ============
-    to_Fusion("fusion", offset="(3,0,0)", to="(quantum_layer-east)", radius=3.5, opacity=0.85),
-    to_connection("quantum_layer", "fusion"),
-    to_connection("classical_features", "fusion"),
+    # Quantum output
+    to_Conv("fc_out_quantum", s_filer=2, n_filer=1, offset="(2,0,0)", to="(fc_post-east)", 
+            height=20, depth=20, width=2, caption="FC Out\\\\256→2"),
+    to_connection("fc_post", "fc_out_quantum"),
     
-    # Add quantum weight annotation
-    to_Conv("qw_param", s_filer=1, n_filer=1, offset="(0,-3.5,0)", to="(fusion-south)", 
-            height=12, depth=12, width=1, caption="alpha weight"),
+    # === CLASSICAL RESIDUAL PATH ===
+    to_Conv("residual", s_filer=2, n_filer=1, offset="(2.5,6,0)", to="(bridge-east)", 
+            height=20, depth=20, width=2, caption="Residual\\\\512→2"),
+    to_connection("bridge", "residual"),
     
-    # ============ LAYER NORMALIZATION ============
-    to_LayerNorm("layer_norm", n_filer=2, offset="(3,0,0)", to="(fusion-east)", 
-                 width=2, height=22, depth=22, caption="LayerNorm"),
-    to_connection("fusion", "layer_norm"),
+    # ============ FUSION WITH QUANTUM WEIGHT ============
+    to_Fusion("fusion", offset="(2.5,0,0)", to="(fc_out_quantum-east)", radius=3.5, opacity=0.85),
+    to_connection("fc_out_quantum", "fusion"),
+    to_connection("residual", "fusion"),
     
-    # Connect Phase 1 path to layer norm
-    to_connection("classical_path", "layer_norm"),
-    
-    # ============ FINAL CLASSIFIER ============
-    to_Conv("classifier", s_filer=2, n_filer=2, offset="(2.5,0,0)", to="(layer_norm-east)", 
-            height=20, depth=20, width=2.5, caption="Classifier FC(2-2)"),
-    to_connection("layer_norm", "classifier"),
+    # Quantum weight annotation (the α parameter)
+    r"""
+\node[text width=5cm, align=center, yshift=-3cm] at (fusion-south) 
+    {\small $\alpha \times$ quantum + $(1-\alpha) \times$ classical};
+""",
     
     # ============ OUTPUT ============
-    to_SoftMax("output", s_filer=2, offset="(2,0,0)", to="(classifier-east)", 
-               width=2, height=5, depth=20, opacity=0.9, 
-               caption="Output"),
-    to_connection("classifier", "output"),
-    
-    # ============ ANNOTATIONS ============
-    # Add text annotations for phases
-    r"""
-% Phase 1 annotation
-\node[text width=3.5cm, align=center, fill=blue!10, rounded corners] at (6, 8, 0) 
-    {\textbf{PHASE 1} \\ Classical \\ 30 epochs};
-
-% Phase 2 annotation  
-\node[text width=3.5cm, align=center, fill=cyan!10, rounded corners] at (12, 8, 0) 
-    {\textbf{PHASE 2} \\ Quantum \\ 50 epochs};
-
-% Warmup annotation
-\node[text width=3.5cm, align=center, fill=orange!10, rounded corners] at (12, -6, 0) 
-    {\textbf{WARMUP} \\ First 10 epochs};
-
-% Parameter count
-\node[text width=4cm, align=center, fill=green!10, rounded corners] at (18, 8, 0) 
-    {\textbf{Parameters: 50,794} \\ CNN: 99.93\% \\ Quantum: 0.045\%};
-
-% Fusion formula
-\node[text width=4cm, align=center, fill=orange!10, rounded corners] at (12, -8, 0) 
-    {\textbf{Fusion} \\ $(1-\alpha) \times classical$ \\ $+ \alpha \times quantum$};
-""",
+    to_SoftMax("output", s_filer=2, offset="(3,0,0)", to="(fusion-east)", 
+               width=2, height=8, depth=20, opacity=0.9, 
+               caption="Output\\\\2 classes"),
+    to_connection("fusion", "output"),
     
     to_end()
 ]
