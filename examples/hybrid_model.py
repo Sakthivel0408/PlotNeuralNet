@@ -144,8 +144,8 @@ arch = [
     to_connection("fc_post", "fc_out_quantum"),
     
     # === CLASSICAL RESIDUAL PATH ===
-    to_Conv("residual", s_filer=2, n_filer=1, offset="(2.5,8,0)", to="(bridge-east)", 
-            height=20, depth=20, width=2, caption="Residual\\\\512→2"),
+    to_Conv("residual", s_filer=2, n_filer=1, offset="(2.5,9.5,0)", to="(bridge-east)", 
+            height=18, depth=18, width=2, caption="Residual\\\\512→2"),
     to_connection("bridge", "residual"),
     
     # ============ FUSION WITH QUANTUM WEIGHT ============
