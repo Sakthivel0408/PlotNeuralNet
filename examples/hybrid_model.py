@@ -155,7 +155,7 @@ arch = [
     
     # Fusion formula annotation - positioned directly below the fusion ball
     r"""
-\node[text width=6cm, align=center, yshift=-5cm] at (fusion-south) 
+\node[text width=6cm, align=center, yshift=-2.5cm] at (fusion-south) 
     {\small $\alpha \times$ quantum + $(1-\alpha) \times$ classical};
 """,
     
