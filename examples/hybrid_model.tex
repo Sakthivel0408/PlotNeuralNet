@@ -154,16 +154,16 @@
 
 \draw [connection]  (flatten-east)    -- node {\midarrow} (bridge-west);
 
-\pic[shift={(2.5,3,0)}] at (bridge-east) 
+\pic[shift={(2.5,4,0)}] at (bridge-east) 
     {Box={
         name=fc_preprocess,
         caption={\small FC}\\512→256,
         xlabel={{1, }},
         zlabel=256,
         fill=\ConvColor,
-        height=28,
+        height=26,
         width=2,
-        depth=28
+        depth=26
         }
     };
 
@@ -231,16 +231,16 @@
 
 \draw [connection]  (fc_post-east)    -- node {\midarrow} (fc_out_quantum-west);
 
-\pic[shift={(2.5,9.5,0)}] at (bridge-east) 
+\pic[shift={(2.5,11,0)}] at (bridge-east) 
     {Box={
         name=residual,
         caption=Residual\\512→2,
         xlabel={{1, }},
         zlabel=2,
         fill=\ConvColor,
-        height=18,
+        height=16,
         width=2,
-        depth=18
+        depth=16
         }
     };
 

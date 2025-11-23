@@ -118,8 +118,8 @@ arch = [
     
     # === QUANTUM PATH (HybridFeatureMapQuantumCircuit) ===
     # Preprocessing
-    to_Conv("fc_preprocess", s_filer=256, n_filer=1, offset="(2.5,3,0)", to="(bridge-east)", 
-            height=28, depth=28, width=2, caption="{\\small FC}\\\\512→256"),
+    to_Conv("fc_preprocess", s_filer=256, n_filer=1, offset="(2.5,4,0)", to="(bridge-east)", 
+            height=26, depth=26, width=2, caption="{\\small FC}\\\\512→256"),
     to_connection("bridge", "fc_preprocess"),
     
     # Feature Map Selector (learnable weights)
@@ -144,8 +144,8 @@ arch = [
     to_connection("fc_post", "fc_out_quantum"),
     
     # === CLASSICAL RESIDUAL PATH ===
-    to_Conv("residual", s_filer=2, n_filer=1, offset="(2.5,9.5,0)", to="(bridge-east)", 
-            height=18, depth=18, width=2, caption="Residual\\\\512→2"),
+    to_Conv("residual", s_filer=2, n_filer=1, offset="(2.5,11,0)", to="(bridge-east)", 
+            height=16, depth=16, width=2, caption="Residual\\\\512→2"),
     to_connection("bridge", "residual"),
     
     # ============ FUSION WITH QUANTUM WEIGHT ============
